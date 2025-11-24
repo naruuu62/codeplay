@@ -44,4 +44,24 @@ class DashboardController extends Controller
 
         return view('dashboard', compact('courses', 'categories', 'enrolledCourseIds'));
     }
+
+    public function userDashboard()
+{
+    if (env('TESTING_MODE') == true) {
+        $user = \App\Models\User::first();
+    } else {
+        $user = Auth::user();
+    }
+
+    if (!$user) {
+        return "User belum ada di database.";
+    }
+
+    $enrollments = UserEnrollment::with('course')
+        ->where('user_id', $user->id)
+        ->get();
+
+    return view('dashboardUser', compact('user', 'enrollments'));
+}
+
 }
