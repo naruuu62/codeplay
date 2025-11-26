@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;  
+use App\Mail\VerificationEmail;
 
 class AuthController extends Controller
 {
@@ -80,7 +82,7 @@ class AuthController extends Controller
         } elseif ($user->isMentor()) {
             return redirect()->route('mentor.dashboard');
         } else {
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard.user');
         }
     }
     // Logout
