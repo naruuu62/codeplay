@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Student Dashboard — LearnCode</title>
+  <title>Student Dashboard — CodePlay</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 
@@ -14,8 +14,8 @@
   <header class="app-header">
     <div class="container app-header-inner">
       <a href="../index.html" class="brand">
-        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
-        <span class="brand-name">LearnCode</span>
+        <img src="../assets/images/logo.png" class="logo" alt="CodePlay" />
+        <span class="brand-name">CodePlay</span>
       </a>
       <nav class="app-nav">
         <a href="{{ route('dashboard.user') }}" class="nav-link">Courses</a>
