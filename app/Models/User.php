@@ -10,6 +10,7 @@ class User extends Authenticatable
 
     protected $table = 'users';
     protected $primaryKey = 'user_id';
+    public $incrementing = true;
     
     protected $fillable = [
         'username',
@@ -32,6 +33,12 @@ class User extends Authenticatable
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    // Override password untuk Auth
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
 
     // Relationships
     public function enrollments()
