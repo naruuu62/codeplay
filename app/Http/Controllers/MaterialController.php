@@ -18,7 +18,7 @@ class MaterialController extends Controller
         $materials = CourseMaterial::with('course')->latest()->paginate(10);
 
         // Pastikan kamu nanti membuat file view di: resources/views/materials/index.blade.php
-        return view('materialUser', compact('materials'));
+        return view('materials.index', compact('materials'));
     }
     
     // Tampilkan materi

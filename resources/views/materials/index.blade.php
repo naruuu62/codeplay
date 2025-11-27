@@ -12,12 +12,12 @@
 <body class="bg-light">
   <header class="app-header">
     <div class="container app-header-inner">
-     <a href="{{ route('dashboard.user') }}">
-        <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
-        <span class="brand-name">LearnCode</span>
+      <a href="{{ route('user.dashboard') }}" class="brand">
+      <img src="{{ asset('assets/logo.svg') }}" class="logo">
+     <span class="brand-name">CodePlay</span>
       </a>
       <nav class="app-nav">
-        <a href="{{ route('dashboard.user') }}" class="nav-link">Courses</a>
+        <a href="{{ route('user.dashboard') }}" class="nav-link">Courses</a>
         <a href="{{ route('materials.index') }}" class="nav-link">Materials</a>
         <a href="{{ route('progress.index')}}" class="nav-link">Progress</a>
          <a href="{{ route('forum.index')}}" class="nav-link">Forum</a>

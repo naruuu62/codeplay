@@ -18,7 +18,7 @@
       {{-- 2. Link Logo ke Homepage --}}
       <a href="{{ url('/') }}" class="brand mb-16">
         {{-- 3. Mengambil gambar menggunakan asset() --}}
-        <img src="{{ asset('assets/images/logo.png') }}" alt="LearnCode Logo" class="logo" />
+        <img src="{{ asset('assets/logo.svg') }}" class="logo" />
         <span class="brand-name">LearnCode</span>
       </a>
 
