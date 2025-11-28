@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Forum — LearnCode</title>
+  <title>Forum — CodePlay</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -13,7 +13,7 @@
     <div class="container app-header-inner">
       <a href="../index.html" class="brand">
         <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
-        <span class="brand-name">LearnCode</span>
+        <span class="brand-name">CodePlay</span>
       </a>
       <nav class="app-nav">
         <a href="{{ route('dashboard.user') }}" class="nav-link">Courses</a>
