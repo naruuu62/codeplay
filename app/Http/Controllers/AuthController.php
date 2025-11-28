@@ -82,7 +82,7 @@ class AuthController extends Controller
         } elseif ($user->isMentor()) {
             return redirect()->route('mentor.dashboard');
         } else {
-            return redirect()->route('dashboard.user');
+            return redirect()->route('user.dashboard');
         }
     }
     // Logout

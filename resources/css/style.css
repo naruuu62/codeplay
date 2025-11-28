@@ -64,7 +64,7 @@ h1, h2, h3, h4 { margin: 0 0 8px; line-height: 1.25; color: var(--text); }
 }
 .header-inner, .app-header-inner, .quiz-header-inner {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 0;
+  padding: 16px 0; flex-direction: row;
 }
 .brand { display: inline-flex; align-items: center; gap: 10px; }
 .logo { width: 32px; height: 32px; }

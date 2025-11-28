@@ -1,4 +1,5 @@
 <?php
+// app/Http/Controllers/AdminController.php
 
 namespace App\Http\Controllers;
 
@@ -18,11 +19,24 @@ class AdminController extends Controller
         $totalUsers = User::count();
         $totalCourses = Course::count();
 
+        // Get all users with enrollments count
+        $users = User::withCount('enrollments')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Get all courses with mentor, category, enrollments
+        $courses = Course::with(['mentor', 'category'])
+            ->withCount('enrollments')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('admin.dashboard', compact(
             'pendingUsers',
             'pendingCourses',
             'totalUsers',
-            'totalCourses'
+            'totalCourses',
+            'users',
+            'courses'
         ));
     }
 
@@ -42,7 +56,7 @@ class AdminController extends Controller
             'description' => "Verified user: {$user->username}"
         ]);
 
-        return redirect()->back()->with('success', 'User berhasil diverifikasi!');
+        return redirect()->back()->with('success', "User {$user->full_name} berhasil diverifikasi!");
     }
 
     // Verifikasi course
@@ -61,15 +75,50 @@ class AdminController extends Controller
             'description' => "Verified course: {$course->title}"
         ]);
 
-        return redirect()->back()->with('success', 'Kursus berhasil diverifikasi!');
+        return redirect()->back()->with('success', "Kursus {$course->title} berhasil diverifikasi!");
     }
 
-    // List pending verifications
-    public function pendingVerifications()
+    // Delete user
+    public function deleteUser($userId)
     {
-        $pendingUsers = User::where('is_verified', false)->get();
-        $pendingCourses = Course::where('is_verified', false)->with('mentor')->get();
+        $user = User::findOrFail($userId);
+        
+        // Prevent deleting yourself
+        if ($userId == Auth::id()) {
+            return redirect()->back()->with('error', 'Tidak bisa menghapus akun sendiri!');
+        }
 
-        return view('admin.verifications', compact('pendingUsers', 'pendingCourses'));
+        $userName = $user->full_name;
+        $user->delete();
+
+        // Log activity
+        AdminLog::create([
+            'admin_id' => Auth::id(),
+            'action' => 'delete_user',
+            'target_type' => 'user',
+            'target_id' => $userId,
+            'description' => "Deleted user: {$userName}"
+        ]);
+
+        return redirect()->back()->with('success', "User {$userName} berhasil dihapus!");
+    }
+
+    // Delete course
+    public function deleteCourse($courseId)
+    {
+        $course = Course::findOrFail($courseId);
+        $courseTitle = $course->title;
+        $course->delete();
+
+        // Log activity
+        AdminLog::create([
+            'admin_id' => Auth::id(),
+            'action' => 'delete_course',
+            'target_type' => 'course',
+            'target_id' => $courseId,
+            'description' => "Deleted course: {$courseTitle}"
+        ]);
+
+        return redirect()->back()->with('success', "Kursus {$courseTitle} berhasil dihapus!");
     }
 }

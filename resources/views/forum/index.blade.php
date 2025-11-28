@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+<<<<<<< HEAD:resources/views/forumUser.blade.php
   <title>Forum — CodePlay</title>
+=======
+  <title>Forum — Codeplay</title>
+>>>>>>> 94f089fb40ccd3aac10a27c4728e8d06318f7db1:resources/views/forum/index.blade.php
     @vite(['resources/css/app.css', 'resources/js/app.js'])
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -11,12 +15,18 @@
 <body class="bg-light">
   <header class="app-header">
     <div class="container app-header-inner">
+<<<<<<< HEAD:resources/views/forumUser.blade.php
       <a href="../index.html" class="brand">
         <img src="../assets/images/logo.png" class="logo" alt="LearnCode" />
         <span class="brand-name">CodePlay</span>
+=======
+      <a href="{{ route('user.dashboard') }}" class="brand">
+      <img src="{{ asset('assets/logo.svg') }}" class="logo">
+      <span class="brand-name">CodePlay</span>
+>>>>>>> 94f089fb40ccd3aac10a27c4728e8d06318f7db1:resources/views/forum/index.blade.php
       </a>
       <nav class="app-nav">
-        <a href="{{ route('dashboard.user') }}" class="nav-link">Courses</a>
+        <a href="{{ route('user.dashboard') }}" class="nav-link">Courses</a>
         <a href="{{ route('materials.index') }}" class="nav-link">Materials</a>
         <a href="{{ route('progress.index')}}" class="nav-link">Progress</a>
          <a href="{{ route('forum.index')}}" class="nav-link">Forum</a>
