@@ -32,7 +32,7 @@
   <header class="app-header">
     <div class="container app-header-inner">
       <a href="{{ route('user.dashboard') }}" class="brand">
-        <img src="{{ asset('assets/images/logo.svg') }}" class="logo" style="width:40px;">
+        <img src="{{ asset('assets/logo.svg') }}" class="logo" style="width:40px;">
         <span class="brand-name">CodePlay</span>
       </a>
       <div class="nav">
@@ -97,8 +97,10 @@
                 
                 {{-- 2. JIKA PDF --}}
                 @elseif($material->type == 'pdf')
-                    <div style="height: 800px;">
-                        <iframe src="{{ asset('storage/' . $material->file_url) }}" width="100%" height="100%" style="border:none;"></iframe>
+                    <div style="height: 600px; overflow: hidden;">
+                        <iframe src="{{ route('material.stream', $material->material_id) }}" 
+                                style="width: 100%; height: 100%; border: none;">
+                        </iframe>
                     </div>
 
                 {{-- 3. JIKA TEXT / ARTIKEL --}}
@@ -122,12 +124,11 @@
                     
                     <div class="d-flex justify-content-between mt-4">
                         <button class="btn btn-outline">Previous Lesson</button>
-                        
-                        {{-- Tombol Mark as Complete --}}
                         <form action="{{ route('material.progress', $material->material_id) }}" method="POST">
                             @csrf
                             <input type="hidden" name="completed" value="1">
-                            <button type="submit" class="btn btn-primary">
+                            <div style="height: 10px;"></div>
+                            <button type="submit" class="btn btn-primary" style="margin 10px">
                                 Mark as Completed <i class="fa-solid fa-check ms-2"></i>
                             </button>
                         </form>

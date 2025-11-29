@@ -7,6 +7,7 @@ use App\Models\MaterialProgress;
 use App\Models\UserEnrollment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class MaterialController extends Controller
 {
@@ -81,7 +82,32 @@ class MaterialController extends Controller
         return response()->download(public_path($material->file_url));
     }
 
-    private function updateEnrollmentProgress($materialId)
+public function streamPdf($id)
+{
+    $material = \App\Models\CourseMaterial::findOrFail($id);
+    
+    // Asumsi di database isinya: "materials/laravel-cheatsheet.pdf"
+    $filename = $material->file_url; 
+
+    // PENTING: Kita paksa pakai disk 'public'
+    if (Storage::disk('public')->exists($filename)) {
+        
+        // Ambil full path dari disk public
+        $fullPath = Storage::disk('public')->path($filename);
+
+        return response()->file($fullPath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . basename($filename) . '"'
+        ]);
+    }
+
+    // Debugging: Kalau masih error, kasih tau dia nyari dimana
+    return response()->json([
+        'error' => 'File tidak ditemukan',
+        'lokasi_seharusnya' => storage_path('app/public/' . $filename),
+        'cek_disk_public' => Storage::disk('public')->path($filename),
+    ], 404);
+}    private function updateEnrollmentProgress($materialId)
     {
         $material = CourseMaterial::findOrFail($materialId);
         $courseId = $material->course_id;
@@ -100,4 +126,6 @@ class MaterialController extends Controller
             ->where('course_id', $courseId)
             ->update(['progress_percentage' => $progress]);
     }
+    
+   
 }

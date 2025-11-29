@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/material/{id}', [MaterialController::class, 'show'])->name('materials.show');
     Route::post('/material/{id}/progress', [MaterialController::class, 'updateProgress'])->name('material.progress');
     Route::get('/material/{id}/download', [MaterialController::class, 'download'])->name('material.download');
+    Route::get('/material/{id}/stream', [App\Http\Controllers\MaterialController::class, 'streamPdf'])->name('material.stream');
     
     // Tutorials
     Route::get('/tutorials', [TutorialController::class, 'index'])->name('tutorials.index');

@@ -10,55 +10,89 @@ use Illuminate\Support\Facades\Auth;
 
 class TutorialController extends Controller
 {
-    // Tampilkan tutorial
+    /**
+     * Method SHOW (Yang Error Tadi)
+     * Fungsinya: Saat user buka /tutorial/1, otomatis cari step pertama
+     * lalu lempar ke halaman belajar.
+     */
     public function show($tutorialId)
     {
-        $tutorial = Tutorial::with(['steps', 'course'])->findOrFail($tutorialId);
-        
-        return view('tutorials.show', compact('tutorial'));
+        // Cari step pertama dari tutorial ini (urutan terkecil)
+        $firstStep = TutorialStep::where('tutorial_id', $tutorialId)
+                        ->orderBy('step_number', 'asc')
+                        ->first();
+
+        if ($firstStep) {
+            // Kalau ada step-nya, langsung redirect ke halaman step
+            return redirect()->route('tutorial.step', $firstStep->step_id);
+        }
+
+        // Kalau tutorialnya masih kosong (belum ada step)
+        return abort(404, 'Tutorial ini belum memiliki materi.');
     }
 
-    // Tampilkan step tutorial
     public function showStep($stepId)
     {
         $step = TutorialStep::with('tutorial')->findOrFail($stepId);
 
-        // Get user progress
+        $tutorialId = $step->tutorial_id;
+
+        $totalSteps = TutorialStep::where('tutorial_id', $tutorialId)->count();
+
+        $nextStep = TutorialStep::where('tutorial_id', $tutorialId)
+                        ->where('step_number', '>', $step->step_number)
+                        ->orderBy('step_number', 'asc')
+                        ->first();
+
+        $prevStep = TutorialStep::where('tutorial_id', $tutorialId)
+                        ->where('step_number', '<', $step->step_number)
+                        ->orderBy('step_number', 'desc')
+                        ->first();
+
         $progress = TutorialProgress::where('user_id', Auth::id())
             ->where('step_id', $stepId)
             ->first();
 
-        return view('tutorials.step', compact('step', 'progress'));
+        return view('tutorials.show', compact('step', 'progress', 'totalSteps', 'nextStep', 'prevStep'));
     }
 
-    // Submit kode tutorial
     public function submitCode(Request $request, $stepId)
     {
         $request->validate([
-            'code' => 'required'
+            'user_code' => 'required'
         ]);
 
         $step = TutorialStep::findOrFail($stepId);
 
-        // TODO: Validasi kode dengan solution_code
-        $isCorrect = trim($request->code) === trim($step->solution_code);
+        $cleanUserCode = str_replace(["\r", "\n", " "], '', $request->user_code);
+        $cleanSolution = str_replace(["\r", "\n", " "], '', $step->solution_code);
 
-        // Save progress
-        $progress = TutorialProgress::updateOrCreate(
+        $isCorrect = $cleanUserCode === $cleanSolution;
+
+        TutorialProgress::updateOrCreate(
             [
                 'user_id' => Auth::id(),
                 'step_id' => $stepId
             ],
             [
-                'user_code' => $request->code,
+                'user_code' => $request->user_code,
                 'is_completed' => $isCorrect,
                 'completed_at' => $isCorrect ? now() : null
             ]
         );
 
-        return response()->json([
-            'success' => $isCorrect,
-            'message' => $isCorrect ? 'Kode benar! Lanjut ke step berikutnya.' : 'Kode belum tepat, coba lagi!'
-        ]);
+        if ($isCorrect) {
+            return redirect()->back()->with('success', 'Selamat! Kode kamu benar. Silakan lanjut.');
+        } else {
+            return redirect()->back()->with('error', 'Kode belum tepat. Coba perhatikan petunjuk lagi.')->withInput();
+        }
     }
+
+    public function index()
+    {
+        $tutorials = Tutorial::with('course')->get();
+        
+        return view('tutorials.index', compact('tutorials'));
+    }
+
 }
